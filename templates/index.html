@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blink Electrics - Click graph to see description</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: white;
+        }
+        .graph-section {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .graph-section:hover {
+            transform: scale(1.05);
+        }
+        .graph-card {
+            display: none;
+        }
+        .active-card {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Blink Electrics - Click Graph to See Description</h1>
+
+        <!-- Graph 1 Section -->
+        <div class="graph-section">
+            <h2>Weight ForeCast</h2>
+            <div id="graph1"></div>
+            <div class="graph-card" id="graph1-card">
+                <p>
+                    This Graph Shows the Weight Forecast From August 28th 2023 to September 27th 2023
+                </p>
+            </div>
+        </div>
+
+        <!-- Graph 2 Section -->
+        <div class="graph-section">
+            <h2>Daily Average Weight</h2>
+            <div id="graph2"></div>
+            <div class="graph-card" id="graph2-card">
+                <p>
+                    This Graph Shows the average weight each day of the stated time
+                    -We have the highest weight on September 6, and the lowest weight on September 13th
+                </p>
+            </div>
+        </div>
+
+        <!-- Graph 3 Section -->
+        <div class="graph-section">
+            <h2>Weight Frequency Distribution</h2>
+            <div id="graph3"></div>
+            <div class="graph-card" id="graph3-card">
+                <p>
+                    The distribution shows that the weight between 5500 to 5990 had the highest frequency of 51
+                    and 9500-9.99k had the lowest frequency of 1
+                </p>
+            </div>
+        </div>
+
+        <!-- Graph 4 Section -->
+        <div class="graph-section">
+            <h2>Box Plot Distribution</h2>
+            <div id="graph4"></div>
+            <div class="graph-card" id="graph4-card">
+                <p>
+                    The boxplot gives weight distribution of min, max, median and quartiles, hover to see the actual values 
+                </p>
+            </div>
+        </div>
+        <div class="graph-section">
+            <h2>Weight overtime with regression line</h2>
+            <div id="graph5"></div>
+            <div class="graph-card" id="graph5-card">
+                <p>
+                    Graph shows weight distribution overtime at nano second timestamp, the regression line gives the trend line and the OLS
+                </p>
+            </div>
+        </div>
+        <div class="graph-section">
+            <h2>Autocorrelation Function of Weight</h2>
+            <div id="graph6"></div>
+            <div class="graph-card" id="graph6-card">
+                <p>
+                    The autocorrelation function is a statistical tool used to measure and describe the correlation between a time series and its lagged values. It helps analysts understand the patterns and dependencies within a time series data set.
+                </p>
+            </div>
+        </div>
+        <div class="graph-section">
+            <h2>Weight and & Day Moving Average</h2>
+            <div id="graph7"></div>
+            <div class="graph-card" id="graph7-card">
+                <p>
+                    Graph shows the trend overtime at a particular timestamp with weight distribution along with a 7 day Moving Average to Check the Consistency with time
+                </p>
+            </div>
+        </div>
+        <div class="graph-section">
+            <h2>Cumulative Weight Over Time</h2>
+            <div id="graph8"></div>
+            <div class="graph-card" id="graph8-card">
+                <p>
+                    Graph shows the sum of weight(cumulative weight) over time
+                </p>
+            </div>
+        </div>
+        <div class="graph-section">
+            <h2>Weight Change Over Time</h2>
+            <div id="graph9"></div>
+            <div class="graph-card" id="graph9-card">
+                <p>
+                    Graph Shows How Weight was Changing Over a particular period of Time
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var graph1Div = document.getElementById('graph1');
+        var graph2Div = document.getElementById('graph2');
+        var graph3Div = document.getElementById('graph3');
+        var graph4Div = document.getElementById('graph4');
+        var graph5Div = document.getElementById('graph5');
+        var graph6Div = document.getElementById('graph6');
+        var graph7Div = document.getElementById('graph7');
+        var graph8Div = document.getElementById('graph8');
+        var graph9Div = document.getElementById('graph9');
+
+        var graph1Card = document.getElementById('graph1-card');
+        var graph2Card = document.getElementById('graph2-card');
+        var graph3Card = document.getElementById('graph3-card');
+        var graph4Card = document.getElementById('graph4-card');
+        var graph5Card = document.getElementById('graph5-card');
+        var graph6Card = document.getElementById('graph6-card');
+        var graph7Card = document.getElementById('graph7-card');
+        var graph8Card = document.getElementById('graph8-card');
+        var graph9Card = document.getElementById('graph9-card');
+
+
+    
+        var graph1Data = {{ graph1.to_json() | safe }};
+        var graph2Data = {{ graph2.to_json() | safe }};
+        var graph3Data = {{ graph3.to_json() | safe }};
+        var graph4Data = {{ graph4.to_json() | safe }};
+        var graph5Data = {{ graph5.to_json() | safe }};
+        var graph6Data = {{ graph6.to_json() | safe }};
+        var graph7Data = {{ graph7.to_json() | safe }};
+        var graph8Data = {{ graph8.to_json() | safe }};
+        var graph9Data = {{ graph9.to_json() | safe }};
+
+
+    
+        function showGraph1() {
+            graph1Card.classList.add('active-card');
+            graph2Card.classList.remove('active-card');
+            graph3Card.classList.remove('active-card');
+            graph4Card.classList.remove('active-card');
+            graph5Card.classList.remove('active-card');
+            graph6Card.classList.remove('active-card');
+            graph7Card.classList.remove('active-card');
+            graph8Card.classList.remove('active-card');
+            graph9Card.classList.remove('active-card');
+
+        }
+    
+        function showGraph2() {
+            graph1Card.classList.remove('active-card');
+            graph2Card.classList.add('active-card');
+            graph3Card.classList.remove('active-card');
+            graph4Card.classList.remove('active-card');
+            graph5Card.classList.remove('active-card');
+            graph6Card.classList.remove('active-card');
+            graph7Card.classList.remove('active-card');
+            graph8Card.classList.remove('active-card');
+            graph9Card.classList.remove('active-card');
+
+
+        }
+    
+        function showGraph3() {
+            graph1Card.classList.remove('active-card');
+            graph2Card.classList.remove('active-card');
+            graph3Card.classList.add('active-card');
+            graph4Card.classList.remove('active-card');
+            graph5Card.classList.remove('active-card');
+            graph6Card.classList.remove('active-card');
+            graph7Card.classList.remove('active-card');
+            graph8Card.classList.remove('active-card');
+            graph9Card.classList.remove('active-card');
+
+
+        }
+
+        function showGraph4() {
+            graph1Card.classList.remove('active-card');
+            graph2Card.classList.remove('active-card');
+            graph3Card.classList.remove('active-card');
+            graph4Card.classList.add('active-card');
+            graph5Card.classList.add('active-card');
+            graph6Card.classList.add('active-card');
+            graph7Card.classList.add('active-card');
+            graph8Card.classList.add('active-card');
+            graph9Card.classList.add('active-card');
+
+
+        }
+        function showGraph5() {
+            graph1Card.classList.remove('active-card');
+            graph2Card.classList.remove('active-card');
+            graph3Card.classList.remove('active-card');
+            graph4Card.classList.remove('active-card');
+            graph5Card.classList.add('active-card');
+            graph6Card.classList.remove('active-card');
+            graph7Card.classList.remove('active-card');
+            graph8Card.classList.remove('active-card');
+            graph9Card.classList.remove('active-card');
+
+
+        }
+        function showGraph6() {
+            graph1Card.classList.remove('active-card');
+            graph2Card.classList.remove('active-card');
+            graph3Card.classList.remove('active-card');
+            graph4Card.classList.remove('active-card');
+            graph5Card.classList.remove('active-card');
+            graph6Card.classList.add('active-card');
+            graph7Card.classList.remove('active-card');
+            graph8Card.classList.remove('active-card');
+            graph9Card.classList.remove('active-card');
+
+
+        }
+        function showGraph7() {
+            graph1Card.classList.remove('active-card');
+            graph2Card.classList.remove('active-card');
+            graph3Card.classList.remove('active-card');
+            graph4Card.classList.remove('active-card');
+            graph5Card.classList.remove('active-card');
+            graph6Card.classList.remove('active-card');
+            graph7Card.classList.add('active-card');
+            graph8Card.classList.remove('active-card');
+            graph9Card.classList.remove('active-card');
+
+
+        }
+        function showGraph8() {
+            graph1Card.classList.remove('active-card');
+            graph2Card.classList.remove('active-card');
+            graph3Card.classList.remove('active-card');
+            graph4Card.classList.remove('active-card');
+            graph5Card.classList.remove('active-card');
+            graph6Card.classList.remove('active-card');
+            graph7Card.classList.remove('active-card');
+            graph8Card.classList.add('active-card');
+            graph9Card.classList.remove('active-card');
+
+
+
+        }
+       
+        function showGraph9() {
+            graph1Card.classList.remove('active-card');
+            graph2Card.classList.remove('active-card');
+            graph3Card.classList.remove('active-card');
+            graph4Card.classList.remove('active-card');
+            graph5Card.classList.remove('active-card');
+            graph6Card.classList.remove('active-card');
+            graph7Card.classList.remove('active-card');
+            graph8Card.classList.remove('active-card');
+            graph9Card.classList.add('active-card');
+
+
+        }
+        Plotly.react(graph1Div, graph1Data.data, graph1Data.layout, { responsive: true });
+        Plotly.react(graph2Div, graph2Data.data, graph2Data.layout, { responsive: true });
+        Plotly.react(graph3Div, graph3Data.data, graph3Data.layout, { responsive: true });
+        Plotly.react(graph4Div, graph4Data.data, graph4Data.layout, { responsive: true });
+        Plotly.react(graph5Div, graph5Data.data, graph5Data.layout, { responsive: true });
+        Plotly.react(graph6Div, graph6Data.data, graph6Data.layout, { responsive: true });
+        Plotly.react(graph7Div, graph7Data.data, graph7Data.layout, { responsive: true });
+        Plotly.react(graph8Div, graph8Data.data, graph8Data.layout, { responsive: true });
+        Plotly.react(graph9Div, graph9Data.data, graph9Data.layout, { responsive: true });
+
+
+    
+        // Add click event listeners to elements by ID
+        graph1Div.addEventListener('click', function() {
+            showGraph1();
+        });
+        graph2Div.addEventListener('click', function() {
+            showGraph2();
+        });
+        graph3Div.addEventListener('click', function() {
+            showGraph3();
+        });
+        graph4Div.addEventListener('click', function() {
+            showGraph4();
+        });
+        graph5Div.addEventListener('click', function() {
+            showGraph5();
+        });
+        graph6Div.addEventListener('click', function() {
+            showGraph6();
+        });
+        graph7Div.addEventListener('click', function() {
+            showGraph7();
+        });
+        graph8Div.addEventListener('click', function() {
+            showGraph8();
+        });
+        graph9Div.addEventListener('click', function() {
+            showGraph9();
+        });
+    
+        // Show Graph 1 by default
+        showGraph1();
+    </script>
+    
+    
+</body>
+</html>
